@@ -1,0 +1,118 @@
+package com.belvinard.blog_api.controller;
+
+import com.belvinard.blog_api.entity.Article;
+import com.belvinard.blog_api.exceptions.ResourceNotFoundException;
+import com.belvinard.blog_api.responses.MyErrorResponses;
+import com.belvinard.blog_api.service.ArticleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/articles")
+@Tag(name = "Article Management", description = "Endpoints for managing blog articles")
+public class ArticleController {
+
+    private final ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
+
+
+    @Operation(summary = "Create a new article", description = "Creates a new blog article")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Article created successfully",
+                    content = @Content(schema = @Schema(implementation = Article.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+    })
+    @PostMapping
+    public ResponseEntity<Article> createArticle(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Article object to be created",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = Article.class)))
+            @RequestBody Article article) {
+        Article createdArticle = articleService.createArticle(article);
+        return new ResponseEntity<>(createdArticle, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Get article by ID", description = "Returns a single article by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article found",
+                    content = @Content(schema = @Schema(implementation = Article.class))),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<Article> getArticleById(
+            @Parameter(description = "ID of the article to be retrieved", required = true)
+            @PathVariable Long id) {
+        Article article = articleService.getArticleById(id);
+        return ResponseEntity.ok(article);
+    }
+
+    @Operation(summary = "Get all articles", description = "Returns a list of all articles")
+    @ApiResponse(responseCode = "200", description = "List of articles",
+            content = @Content(schema = @Schema(implementation = Article.class)))
+    @GetMapping
+    public ResponseEntity<List<Article>> getAllArticles() {
+        List<Article> articles = articleService.getAllArticles();
+        return ResponseEntity.ok(articles);
+    }
+
+    @Operation(summary = "Update an article", description = "Updates an existing article")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article updated successfully",
+                    content = @Content(schema = @Schema(implementation = Article.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class))),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<Article> updateArticle(
+            @Parameter(description = "ID of the article to be updated", required = true)
+            @PathVariable Long id,
+
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Updated article object",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = Article.class)))
+            @RequestBody Article articleDetails) {
+        Article updatedArticle = articleService.updateArticle(id, articleDetails);
+        return ResponseEntity.ok(updatedArticle);
+    }
+
+    @Operation(summary = "Delete an article", description = "Deletes an article by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Article deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteArticle(
+            @Parameter(description = "ID of the article to be deleted", required = true)
+            @PathVariable Long id) {
+        articleService.deleteArticle(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(hidden = true)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<MyErrorResponses> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        MyErrorResponses errorResponse = new MyErrorResponses("NOT_FOUND", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+}
