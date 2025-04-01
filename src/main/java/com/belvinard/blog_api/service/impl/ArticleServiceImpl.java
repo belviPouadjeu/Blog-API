@@ -4,7 +4,6 @@ import com.belvinard.blog_api.entity.Article;
 import com.belvinard.blog_api.exceptions.ResourceNotFoundException;
 import com.belvinard.blog_api.repository.ArticleRepository;
 import com.belvinard.blog_api.service.ArticleService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

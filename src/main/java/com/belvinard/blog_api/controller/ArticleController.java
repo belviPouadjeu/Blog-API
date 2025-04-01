@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/articles")
@@ -81,19 +82,24 @@ public class ArticleController {
             @ApiResponse(responseCode = "404", description = "Article not found",
                     content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<Article> updateArticle(
-            @Parameter(description = "ID of the article to be updated", required = true)
+    @PatchMapping("/{id}")
+    public ResponseEntity<Article> patchArticle(
             @PathVariable Long id,
+            @RequestBody Map<String, Object> updates) {
 
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Updated article object",
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = Article.class)))
-            @RequestBody Article articleDetails) {
-        Article updatedArticle = articleService.updateArticle(id, articleDetails);
+        Article article = articleService.getArticleById(id);
+
+        if (updates.containsKey("title")) {
+            article.setTitle((String) updates.get("title"));
+        }
+        if (updates.containsKey("content")) {
+            article.setContent((String) updates.get("content"));
+        }
+
+        Article updatedArticle = articleService.updateArticle(id, article);
         return ResponseEntity.ok(updatedArticle);
     }
+
 
     @Operation(summary = "Delete an article", description = "Deletes an article by its ID")
     @ApiResponses(value = {

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,6 +25,7 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
 
+    @Setter
     @Column(nullable = false, length = 30)
     @Size(min = 5, max = 30, message = "Title must be 5-30 characters")
     @NotBlank(message = "Title cannot be blank")
@@ -46,11 +48,15 @@ public class Article {
     @JsonIgnore  // Prevents infinite recursion in JSON responses
     private List<Comment> comments = new ArrayList<>();
 
+    public Article() {
+    }
+
     public Article(Long articleId, String title, String content) {
         this.articleId = articleId;
         this.title = title;
         this.content = content;
     }
+
 
     public Long getArticleId() {
         return articleId;
@@ -64,15 +70,15 @@ public class Article {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
