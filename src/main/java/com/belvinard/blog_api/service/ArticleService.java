@@ -13,4 +13,5 @@ public interface ArticleService {
     ArticleDTO patchArticle(Long articleId, ArticleDTO articleDTO);
     ArticleDTO deleteArticle(Long articleId);
 
+
 }

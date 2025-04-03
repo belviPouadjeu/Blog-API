@@ -1,4 +1,4 @@
-package com.belvinard.blog_api.repository;
+package com.belvinard.blog_api.repositories;
 
 import com.belvinard.blog_api.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;

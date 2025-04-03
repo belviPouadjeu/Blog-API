@@ -1,4 +1,4 @@
-package com.belvinard.blog_api.controller;
+package com.belvinard.blog_api.controllers;
 
 import com.belvinard.blog_api.dtos.ArticleDTO;
 import com.belvinard.blog_api.entity.Article;

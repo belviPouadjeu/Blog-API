@@ -4,7 +4,7 @@ import com.belvinard.blog_api.dtos.ArticleDTO;
 import com.belvinard.blog_api.entity.Article;
 import com.belvinard.blog_api.exceptions.APIException;
 import com.belvinard.blog_api.exceptions.ResourceNotFoundException;
-import com.belvinard.blog_api.repository.ArticleRepository;
+import com.belvinard.blog_api.repositories.ArticleRepository;
 import com.belvinard.blog_api.responses.ArticleResponse;
 import com.belvinard.blog_api.service.ArticleService;
 import jakarta.validation.Valid;
