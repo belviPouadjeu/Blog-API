@@ -29,6 +29,8 @@ public class ArticleDTO {
 
     @Schema(hidden = true) // Hide lastUpdated in request schema
     private LocalDateTime lastUpdated;
+
+    @Schema(hidden = true)
     private List<CommentDTO> comments;
 
     public ArticleDTO() {

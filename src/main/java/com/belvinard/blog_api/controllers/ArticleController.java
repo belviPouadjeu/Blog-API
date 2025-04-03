@@ -42,7 +42,8 @@ public class ArticleController {
             summary = "Retrieve all articles",
             description = """
         Returns the complete list of articles stored in the database.
-        This API is accessible without authentication.
+        This API is accessible without authentication. Each article may include comments
+        related to the article for better understanding and feedback.
     """
     )
     @ApiResponses(value = {
@@ -53,53 +54,40 @@ public class ArticleController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ArticleResponse.class),
                             examples = @ExampleObject(value = """
+{
+    "content": [
         {
-            "content": [
+            "articleId": 1,
+            "title": "Introduction to HTML5",
+            "content": "HTML5 is the latest version of the HyperText Markup Language used to structure web pages.",
+            "publicationDate": "2025-04-03T15:08:33.492405",
+            "lastUpdated": "2025-04-03T15:08:33.491407",
+            "comments": [
                 {
-                    "articleId": 1,
-                    "title": "Introduction to HTML5",
-                    "content": "HTML5 is the latest version of the HyperText Markup Language used to structure web pages.",
-                    "publicationDate": "2025-04-03T15:08:33.492405",
-                    "lastUpdated": "2025-04-03T15:08:33.491407"
+                    "createdAt": "2025-04-03T16:20:06.330759",
+                    "text": "This article provides a great introduction to HTML5 basics!"
                 },
                 {
-                    "articleId": 2,
-                    "title": "CSS Grid vs Flexbox",
-                    "content": "Learn the differences and use cases for CSS Grid and Flexbox in modern web design.",
-                    "publicationDate": "2025-04-03T15:11:41.467586",
-                    "lastUpdated": "2025-04-03T15:11:41.467586"
+                    "createdAt": "2025-04-03T16:22:45.314917",
+                    "text": "This article provides a great introduction to HTML5 basics!"
+                },
+                {
+                    "createdAt": "2025-04-03T16:29:59.650286",
+                    "text": "Great article! Very informative."
                 }
             ]
-        }
-        """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "No articles found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = MyErrorResponses.class),
-                            examples = @ExampleObject(value = """
+        },
         {
-            "code": "NOT_FOUND",
-            "message": "No articles available"
+            "articleId": 2,
+            "title": "CSS Grid vs Flexbox",
+            "content": "Learn the differences and use cases for CSS Grid and Flexbox in modern web design.",
+            "publicationDate": "2025-04-03T15:11:41.467586",
+            "lastUpdated": "2025-04-03T15:11:41.467586",
+            "comments": []
         }
-        """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = MyErrorResponses.class),
-                            examples = @ExampleObject(value = """
-        {
-            "code": "INTERNAL_SERVER_ERROR",
-            "message": "An error occurred while retrieving the articles"
-        }
-        """)
+    ]
+}
+                        """)
                     )
             )
     })
@@ -113,9 +101,9 @@ public class ArticleController {
     @Operation(
             summary = "Create a new article",
             description = """
-        Adds a new article to the blog.
-        The request must include a valid article object with a title and content.
-    """
+    Adds a new article to the blog.
+    The request must include a valid article object with a title and content.
+"""
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -123,7 +111,7 @@ public class ArticleController {
                     description = "Article created successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ArticleDTO.class),
+                            schema = @Schema(implementation = ArticleDTO.class), // ✅ Use a new DTO for request
                             examples = @ExampleObject(value = """
         {
             "title": "The Impact of Climate Change",
@@ -145,20 +133,6 @@ public class ArticleController {
         }
         """)
                     )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = MyErrorResponses.class),
-                            examples = @ExampleObject(value = """
-        {
-            "code": "INTERNAL_SERVER_ERROR",
-            "message": "An unexpected error occurred while creating the article"
-        }
-        """)
-                    )
             )
     })
     @PostMapping
@@ -167,6 +141,7 @@ public class ArticleController {
         ArticleDTO createdArticle = articleService.createArticle(articleDTO);
         return new ResponseEntity<>(createdArticle, HttpStatus.CREATED);
     }
+
 
     // ==================== GET ARTICLE BY ID
     @Operation(
