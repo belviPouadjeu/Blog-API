@@ -66,12 +66,12 @@ public class ArticleController {
             @ApiResponse(responseCode = "404", description = "Article not found",
                     content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
     })
-    @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticleById(
+    @GetMapping("/{articleId}")
+    public ResponseEntity<ArticleDTO> getArticleById(
             @Parameter(description = "ID of the article to be retrieved", required = true)
-            @PathVariable Long id) {
-        Article article = articleService.getArticleById(id);
-        return ResponseEntity.ok(article);
+            @PathVariable Long articleId) {
+        ArticleDTO articleDTO = articleService.getArticleById(articleId);
+        return ResponseEntity.ok(articleDTO);
     }
 
 //

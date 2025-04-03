@@ -9,7 +9,7 @@ import java.util.List;
 public interface ArticleService {
     ArticleResponse getAllArticles();
     ArticleDTO createArticle(ArticleDTO articleDTO);
-    Article getArticleById(Long articleId);
+    ArticleDTO getArticleById(Long articleId);
     Article updateArticle(Long articleId, Article articleDetails);
     Article deleteArticle(Long articleId);
 }
