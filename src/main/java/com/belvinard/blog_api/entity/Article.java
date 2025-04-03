@@ -30,7 +30,7 @@ public class Article {
     private String title;
 
     @Column(nullable = false, length = 2000)
-    @Size(min = 10, message = "Content must be at least 10 characters")
+    @Size(min = 10, max = 200, message = "Content must be at least 10 characters")
     @NotBlank(message = "Content cannot be blank")
     private String content;
 
