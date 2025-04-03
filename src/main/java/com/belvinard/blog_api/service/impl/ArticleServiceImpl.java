@@ -33,7 +33,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getAllArticles() {
-        return articleRepository.findAll();
+        List<Article> articles = articleRepository.findAll();
+        if (articles.isEmpty()) {
+            throw new ResourceNotFoundException("No articles create until now !");
+        }
+        return articles;
     }
 
     @Override
