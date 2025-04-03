@@ -9,5 +9,5 @@ public interface ArticleService {
     Article getArticleById(Long articleId);
     List<Article> getAllArticles();
     Article updateArticle(Long articleId, Article articleDetails);
-    void deleteArticle(Long articleId);
+    Article deleteArticle(Long articleId);
 }

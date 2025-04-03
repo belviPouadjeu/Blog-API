@@ -50,16 +50,22 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public Article updateArticle(Long articleId, Article articleDetails) {
-        Article article = getArticleById(articleId);
-        article.setTitle(articleDetails.getTitle());
-        article.setContent(articleDetails.getContent());
-        return articleRepository.save(article);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Article", "article_id", articleId));
+
+        article.setArticleId(articleId);
+
+        Article savedArticle = articleRepository.save(article);
+        return savedArticle;
     }
 
     @Override
     @Transactional
-    public void deleteArticle(Long articleId) {
-        Article article = getArticleById(articleId);
+    public Article deleteArticle(Long articleId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Article", "article_id", articleId));
         articleRepository.delete(article);
+        return article;
     }
+
 }
