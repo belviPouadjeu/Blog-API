@@ -7,9 +7,11 @@ import com.belvinard.blog_api.exceptions.ResourceNotFoundException;
 import com.belvinard.blog_api.repository.ArticleRepository;
 import com.belvinard.blog_api.responses.ArticleResponse;
 import com.belvinard.blog_api.service.ArticleService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -43,17 +45,31 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    @Transactional
-    public Article createArticle(Article article) {
+    public ArticleDTO createArticle(@Valid @RequestBody ArticleDTO articleDTO) {
+        Article article = modelMapper.map(articleDTO, Article.class);
         Article articleFromDb = articleRepository.findByTitle(article.getTitle());
         if (articleFromDb != null) {
             throw new ResourceNotFoundException("Article with the name " + article.getTitle() + " already exists");
 
         }
 
+
         Article savedArticle = articleRepository.save(article);
-        return savedArticle;
+        return modelMapper.map(savedArticle, ArticleDTO.class);
     }
+
+//    @Override
+//    @Transactional
+//    public Article createArticle(Article article) {
+//        Article articleFromDb = articleRepository.findByTitle(article.getTitle());
+//        if (articleFromDb != null) {
+//            throw new ResourceNotFoundException("Article with the name " + article.getTitle() + " already exists");
+//
+//        }
+//
+//        Article savedArticle = articleRepository.save(article);
+//        return savedArticle;
+//    }
 
     @Override
     public Article getArticleById(Long articleId) {

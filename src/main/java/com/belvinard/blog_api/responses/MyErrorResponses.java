@@ -1,14 +1,16 @@
 package com.belvinard.blog_api.responses;
 
+import java.util.Map;
+
 public class MyErrorResponses {
     private String status;
     private String message;
+    //private Map<String, String> errors;
 
     // No-args constructor (required by JPA/Jackson in some cases)
     public MyErrorResponses() {
     }
 
-    // All-args constructor
     public MyErrorResponses(String status, String message) {
         this.status = status;
         this.message = message;
