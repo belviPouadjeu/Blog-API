@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 //@AllArgsConstructor
 //@NoArgsConstructor
@@ -20,11 +22,22 @@ public class CommentDTO {
     @JsonProperty("text")
     private String text;
 
-    public CommentDTO(String text) {
-        this.text = text;
-    }
+    private LocalDateTime createdAt;
 
     public CommentDTO() {
+    }
+
+    public CommentDTO(String text, LocalDateTime createdAt) {
+        this.text = text;
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getText() {

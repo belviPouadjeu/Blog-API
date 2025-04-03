@@ -103,7 +103,6 @@ public class ArticleController {
                     )
             )
     })
-
     @GetMapping
     public ResponseEntity<ArticleResponse> getAllArticles() {
         ArticleResponse articles = articleService.getAllArticles();

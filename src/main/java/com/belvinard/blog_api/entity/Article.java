@@ -19,7 +19,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "articles")  // Optional (if you want to explicitly name the table)
 public class Article {
@@ -53,7 +52,13 @@ public class Article {
     public Article() {
     }
 
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
 
     public LocalDateTime getPublicationDate() {
         return publicationDate;

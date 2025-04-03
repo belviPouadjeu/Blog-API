@@ -3,11 +3,10 @@ package com.belvinard.blog_api.dtos;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ArticleDTO {
@@ -30,8 +29,31 @@ public class ArticleDTO {
 
     @Schema(hidden = true) // Hide lastUpdated in request schema
     private LocalDateTime lastUpdated;
+    private List<CommentDTO> comments;
 
     public ArticleDTO() {
+    }
+
+    public ArticleDTO(Long articleId, String title, String content,
+                      LocalDateTime publicationDate, LocalDateTime lastUpdated,
+                      List<CommentDTO> comments) {
+        this.articleId = articleId;
+        this.title = title;
+        this.content = content;
+        this.publicationDate = publicationDate;
+        this.lastUpdated = lastUpdated;
+        this.comments = comments;
+    }
+
+    public List<CommentDTO> getComments() {
+        return comments;
+    }
+
+
+
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
     }
 
     public LocalDateTime getPublicationDate() {
@@ -50,13 +72,6 @@ public class ArticleDTO {
         this.lastUpdated = lastUpdated;
     }
 
-    public ArticleDTO(Long articleId, String title, String content, LocalDateTime publicationDate, LocalDateTime lastUpdated) {
-        this.articleId = articleId;
-        this.title = title;
-        this.content = content;
-        this.publicationDate = publicationDate;
-        this.lastUpdated = lastUpdated;
-    }
 
     public Long getArticleId() {
         return articleId;
