@@ -21,7 +21,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public Article createArticle(Article article) {
-        return articleRepository.save(article);
+        Article articleFromDb = articleRepository.findByTitle(article.getTitle());
+        if (articleFromDb != null) {
+            throw new ResourceNotFoundException("Article with the name " + article.getTitle() + " already exists");
+
+        }
+
+        Article savedArticle = articleRepository.save(article);
+        return savedArticle;
     }
 
     @Override

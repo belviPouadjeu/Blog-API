@@ -15,7 +15,7 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${server.port:8081}")
+    @Value("${server.port:8085}")
     private String serverPort;
 
     @Bean
