@@ -10,6 +10,7 @@ import com.belvinard.blog_api.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -36,21 +37,130 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @Operation(summary = "Get all articles", description = "Returns a list of all articles")
-    @ApiResponse(responseCode = "200", description = "List of articles",
-            content = @Content(schema = @Schema(implementation = Article.class)))
+    // ==================== GET ALL ARTICLE
+    @Operation(
+            summary = "Retrieve all articles",
+            description = """
+        Returns the complete list of articles stored in the database.
+        This API is accessible without authentication.
+    """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "List of articles successfully retrieved",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ArticleResponse.class),
+                            examples = @ExampleObject(value = """
+        {
+            "content": [
+                {
+                    "articleId": 1,
+                    "title": "Introduction to HTML5",
+                    "content": "HTML5 is the latest version of the HyperText Markup Language used to structure web pages.",
+                    "publicationDate": "2025-04-03T15:08:33.492405",
+                    "lastUpdated": "2025-04-03T15:08:33.491407"
+                },
+                {
+                    "articleId": 2,
+                    "title": "CSS Grid vs Flexbox",
+                    "content": "Learn the differences and use cases for CSS Grid and Flexbox in modern web design.",
+                    "publicationDate": "2025-04-03T15:11:41.467586",
+                    "lastUpdated": "2025-04-03T15:11:41.467586"
+                }
+            ]
+        }
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No articles found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "NOT_FOUND",
+            "message": "No articles available"
+        }
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "INTERNAL_SERVER_ERROR",
+            "message": "An error occurred while retrieving the articles"
+        }
+        """)
+                    )
+            )
+    })
+
     @GetMapping
     public ResponseEntity<ArticleResponse> getAllArticles() {
         ArticleResponse articles = articleService.getAllArticles();
         return ResponseEntity.ok(articles);
     }
 
-    @Operation(summary = "Create a new article", description = "Creates a new blog article")
+    // ==================== CREATEARTICLE
+    @Operation(
+            summary = "Create a new article",
+            description = """
+        Adds a new article to the blog.
+        The request must include a valid article object with a title and content.
+    """
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Article created successfully",
-                    content = @Content(schema = @Schema(implementation = Article.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input",
-                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Article created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ArticleDTO.class),
+                            examples = @ExampleObject(value = """
+        {
+            "title": "The Impact of Climate Change",
+            "content": "Rising temperatures and extreme weather events highlight the urgency..."
+        }
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input - missing or incorrect fields",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "BAD_REQUEST",
+            "message": "Title is required"
+        }
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "INTERNAL_SERVER_ERROR",
+            "message": "An unexpected error occurred while creating the article"
+        }
+        """)
+                    )
+            )
     })
     @PostMapping
     public ResponseEntity<ArticleDTO> createArticle(
@@ -59,12 +169,60 @@ public class ArticleController {
         return new ResponseEntity<>(createdArticle, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get article by ID", description = "Returns a single article by its ID")
+    // ==================== GET ARTICLE BY ID
+    @Operation(
+            summary = "Get an article by ID",
+            description = """
+        Retrieves a single article based on the provided ID.
+        The article ID must be valid and exist in the database.
+    """
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Article found",
-                    content = @Content(schema = @Schema(implementation = Article.class))),
-            @ApiResponse(responseCode = "404", description = "Article not found",
-                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Article found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ArticleDTO.class),
+                            examples = @ExampleObject(value = """
+        {
+            "articleId": 1,
+             "title": "Introduction to HTML5",
+             "content": "HTML5 is the latest version of the HyperText Markup Language used to structure web pages.",
+             "publicationDate": "2025-04-03T15:08:33.492405",
+             "lastUpdated": "2025-04-03T15:08:33.491407"
+        }
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Article not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "NOT_FOUND",
+            "message": "No article found with ID 10"
+        }
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "INTERNAL_SERVER_ERROR",
+            "message": "An unexpected error occurred while retrieving the article"
+        }
+        """)
+                    )
+            )
     })
     @GetMapping("/{articleId}")
     public ResponseEntity<ArticleDTO> getArticleById(
@@ -74,7 +232,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleDTO);
     }
 
-
+    // ==================== UPDATE ARTICLE
     @Operation(summary = "Update an article", description = "Updates an existing article")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Article updated successfully",
@@ -93,12 +251,53 @@ public class ArticleController {
         return ResponseEntity.ok(updatedArticle);
     }
 
-
-    @Operation(summary = "Delete an article", description = "Deletes an article by its ID")
+    // ==================== DELETE ARTICLE
+    @Operation(
+            summary = "Delete an article",
+            description = """
+        Deletes a blog article by its ID.
+        If the article exists, it will be removed permanently.
+        If the article ID does not exist, an error is returned.
+    """
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Article deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Article not found",
-                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Article deleted successfully",
+                    content = @Content(
+                            examples = @ExampleObject(value = """
+       
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Article not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "NOT_FOUND",
+            "message": "No article found with ID 15"
+        }
+        """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyErrorResponses.class),
+                            examples = @ExampleObject(value = """
+        {
+            "code": "INTERNAL_SERVER_ERROR",
+            "message": "An unexpected error occurred while deleting the article"
+        }
+        """)
+                    )
+            )
     })
     @DeleteMapping("/{articleId}")
     public ResponseEntity<ArticleDTO> deleteArticle(
@@ -109,6 +308,23 @@ public class ArticleController {
         return ResponseEntity.ok(deletedArticle);
     }
 
+
+    // ✅ Handle validation errors
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<MyErrorResponses> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());  // Collect field errors
+        }
+
+        MyErrorResponses errorResponse = new MyErrorResponses(
+                "BAD_REQUEST",
+                "Validation failed. Please correct the errors.",
+                errors
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
 
     @Operation(hidden = true)
@@ -134,21 +350,6 @@ public class ArticleController {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<MyErrorResponses> handleValidationExceptions(MethodArgumentNotValidException ex) {
-//        Map<String, String> errors = new HashMap<>();
-//        ex.getBindingResult().getAllErrors().forEach(error -> {
-//            String fieldName = ((FieldError) error).getField();
-//            String errorMessage = error.getDefaultMessage();
-//            errors.put(fieldName, errorMessage);
-//        });
-//
-//        MyErrorResponses errorResponse = new MyErrorResponses("VALIDATION_ERROR", "Validation failed");
-//        errorResponse.setErrors(errors); // Add this field to your MyErrorResponses class
-//
-//        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-//    }
 
 
 

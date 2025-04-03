@@ -5,9 +5,8 @@ import java.util.Map;
 public class MyErrorResponses {
     private String status;
     private String message;
-    //private Map<String, String> errors;
+    private Map<String, String> errors;  // Stores field-specific errors
 
-    // No-args constructor (required by JPA/Jackson in some cases)
     public MyErrorResponses() {
     }
 
@@ -16,20 +15,19 @@ public class MyErrorResponses {
         this.message = message;
     }
 
-    // Getters and setters
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
+    public MyErrorResponses(String status, String message, Map<String, String> errors) {
         this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
+        this.errors = errors;
     }
+
+    // Getters and setters
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+
+    public Map<String, String> getErrors() { return errors; }
+    public void setErrors(Map<String, String> errors) { this.errors = errors; }
 }
