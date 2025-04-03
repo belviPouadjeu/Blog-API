@@ -10,7 +10,7 @@ public interface ArticleService {
     ArticleResponse getAllArticles();
     ArticleDTO createArticle(ArticleDTO articleDTO);
     ArticleDTO getArticleById(Long articleId);
-    Article updateArticle(Long articleId, Article articleDetails);
     ArticleDTO patchArticle(Long articleId, ArticleDTO articleDTO);
-    Article deleteArticle(Long articleId);
+    ArticleDTO deleteArticle(Long articleId);
+
 }

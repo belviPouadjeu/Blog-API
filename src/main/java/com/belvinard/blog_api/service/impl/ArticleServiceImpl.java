@@ -69,20 +69,6 @@ public class ArticleServiceImpl implements ArticleService {
         return modelMapper.map(article, ArticleDTO.class);
     }
 
-
-
-    @Override
-    @Transactional
-    public Article updateArticle(Long articleId, Article articleDetails) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Article", "article_id", articleId));
-
-        article.setArticleId(articleId);
-
-        Article savedArticle = articleRepository.save(article);
-        return savedArticle;
-    }
-
     @Override
     @Transactional
     public ArticleDTO patchArticle(Long articleId, ArticleDTO articleDTO) {
@@ -102,11 +88,16 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article deleteArticle(Long articleId) {
+    public ArticleDTO deleteArticle(Long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article", "article_id", articleId));
+
+        // Convert to DTO before deletion for return
+        ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
+
         articleRepository.delete(article);
-        return article;
+
+        return articleDTO;  // Return DTO with deleted details
     }
 
 }

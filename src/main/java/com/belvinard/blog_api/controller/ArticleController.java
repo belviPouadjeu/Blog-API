@@ -93,21 +93,22 @@ public class ArticleController {
         return ResponseEntity.ok(updatedArticle);
     }
 
-//
-//    @Operation(summary = "Delete an article", description = "Deletes an article by its ID")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "Article deleted successfully"),
-//            @ApiResponse(responseCode = "404", description = "Article not found",
-//                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
-//    })
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteArticle(
-//            @Parameter(description = "ID of the article to be deleted", required = true)
-//            @PathVariable Long id) {
-//        articleService.deleteArticle(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//
+
+    @Operation(summary = "Delete an article", description = "Deletes an article by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Article deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+    })
+    @DeleteMapping("/{articleId}")
+    public ResponseEntity<ArticleDTO> deleteArticle(
+            @Parameter(description = "ID of the article to be deleted", required = true)
+            @PathVariable Long articleId) {
+
+        ArticleDTO deletedArticle = articleService.deleteArticle(articleId);
+        return ResponseEntity.ok(deletedArticle);
+    }
+
 
 
     @Operation(hidden = true)
