@@ -1,9 +1,13 @@
 package com.belvinard.blog_api.service.impl;
 
+import com.belvinard.blog_api.dtos.ArticleDTO;
 import com.belvinard.blog_api.entity.Article;
+import com.belvinard.blog_api.exceptions.APIException;
 import com.belvinard.blog_api.exceptions.ResourceNotFoundException;
 import com.belvinard.blog_api.repository.ArticleRepository;
+import com.belvinard.blog_api.responses.ArticleResponse;
 import com.belvinard.blog_api.service.ArticleService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +17,29 @@ import java.util.List;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final ModelMapper modelMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, ModelMapper modelMapper) {
         this.articleRepository = articleRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    @Override
+    public ArticleResponse getAllArticles() {
+        List<Article> articles = articleRepository.findAll();
+        if (articles.isEmpty()) {
+            throw new APIException("No articles create until now !");
+        }
+
+        List<ArticleDTO> articleDTOS = articles.stream()
+                .map(article -> modelMapper.map(article, ArticleDTO.class))
+                .toList();
+
+        ArticleResponse articleResponse = new ArticleResponse();
+        articleResponse.setContent(articleDTOS);
+        return articleResponse;
+
+
     }
 
     @Override
@@ -36,15 +60,6 @@ public class ArticleServiceImpl implements ArticleService {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Article", "article_id", articleId));
-    }
-
-    @Override
-    public List<Article> getAllArticles() {
-        List<Article> articles = articleRepository.findAll();
-        if (articles.isEmpty()) {
-            throw new ResourceNotFoundException("No articles create until now !");
-        }
-        return articles;
     }
 
     @Override

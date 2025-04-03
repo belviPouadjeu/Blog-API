@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Table(name = "articles")  // Optional (if you want to explicitly name the table)
 public class Article {
     @Id

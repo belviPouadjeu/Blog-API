@@ -1,20 +1,33 @@
 package com.belvinard.blog_api.responses;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
 public class MyErrorResponses {
-    private String code;
+    private String status;
     private String message;
 
+    // No-args constructor (required by JPA/Jackson in some cases)
     public MyErrorResponses() {
     }
 
-    // Add this convenience constructor if you want to keep using the two-parameter version
-    public MyErrorResponses(String code, String message) {
-        this.code = code;
+    // All-args constructor
+    public MyErrorResponses(String status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+
+    // Getters and setters
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
         this.message = message;
     }
 }
