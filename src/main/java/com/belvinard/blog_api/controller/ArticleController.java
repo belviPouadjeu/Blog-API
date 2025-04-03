@@ -74,43 +74,25 @@ public class ArticleController {
         return ResponseEntity.ok(articleDTO);
     }
 
-//
-//    @Operation(summary = "Get all articles", description = "Returns a list of all articles")
-//    @ApiResponse(responseCode = "200", description = "List of articles",
-//            content = @Content(schema = @Schema(implementation = Article.class)))
-//    @GetMapping
-//    public ResponseEntity<List<Article>> getAllArticles() {
-//        List<Article> articles = articleService.getAllArticles();
-//        return ResponseEntity.ok(articles);
-//    }
-//
-//    @Operation(summary = "Update an article", description = "Updates an existing article")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Article updated successfully",
-//                    content = @Content(schema = @Schema(implementation = Article.class))),
-//            @ApiResponse(responseCode = "400", description = "Invalid input",
-//                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class))),
-//            @ApiResponse(responseCode = "404", description = "Article not found",
-//                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
-//    })
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<Article> patchArticle(
-//            @PathVariable Long id,
-//            @RequestBody Map<String, Object> updates) {
-//
-//        Article article = articleService.getArticleById(id);
-//
-//        if (updates.containsKey("title")) {
-//            article.setTitle((String) updates.get("title"));
-//        }
-//        if (updates.containsKey("content")) {
-//            article.setContent((String) updates.get("content"));
-//        }
-//
-//        Article updatedArticle = articleService.updateArticle(id, article);
-//        return ResponseEntity.ok(updatedArticle);
-//    }
-//
+
+    @Operation(summary = "Update an article", description = "Updates an existing article")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article updated successfully",
+                    content = @Content(schema = @Schema(implementation = Article.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class))),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content(schema = @Schema(implementation = MyErrorResponses.class)))
+    })
+    @PatchMapping("/{articleId}")
+    public ResponseEntity<ArticleDTO> patchArticle(
+            @PathVariable Long articleId,
+            @Valid @RequestBody ArticleDTO articleDTO) {
+
+        ArticleDTO updatedArticle = articleService.patchArticle(articleId, articleDTO);
+        return ResponseEntity.ok(updatedArticle);
+    }
+
 //
 //    @Operation(summary = "Delete an article", description = "Deletes an article by its ID")
 //    @ApiResponses(value = {

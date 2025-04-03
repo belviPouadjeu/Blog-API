@@ -71,19 +71,6 @@ public class ArticleServiceImpl implements ArticleService {
 
 
 
-//    @Override
-//    @Transactional
-//    public Article createArticle(Article article) {
-//        Article articleFromDb = articleRepository.findByTitle(article.getTitle());
-//        if (articleFromDb != null) {
-//            throw new ResourceNotFoundException("Article with the name " + article.getTitle() + " already exists");
-//
-//        }
-//
-//        Article savedArticle = articleRepository.save(article);
-//        return savedArticle;
-//    }
-
     @Override
     @Transactional
     public Article updateArticle(Long articleId, Article articleDetails) {
@@ -94,6 +81,23 @@ public class ArticleServiceImpl implements ArticleService {
 
         Article savedArticle = articleRepository.save(article);
         return savedArticle;
+    }
+
+    @Override
+    @Transactional
+    public ArticleDTO patchArticle(Long articleId, ArticleDTO articleDTO) {
+        Article existingArticle = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Article", "article_id", articleId));
+
+        // Only update non-null fields from DTO to existing entity
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.map(articleDTO, existingArticle);
+
+        // Ensure ID remains unchanged
+        existingArticle.setArticleId(articleId);
+
+        Article updatedArticle = articleRepository.save(existingArticle);
+        return modelMapper.map(updatedArticle, ArticleDTO.class);
     }
 
     @Override
