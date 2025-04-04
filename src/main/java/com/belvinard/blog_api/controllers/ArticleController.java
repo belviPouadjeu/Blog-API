@@ -61,7 +61,7 @@ public class ArticleController {
             "title": "Introduction to HTML5",
             "content": "HTML5 is the latest version of the HyperText Markup Language used to structure web pages.",
             "publicationDate": "2025-04-03T15:08:33.492405",
-            "lastUpdated": "2025-04-03T15:08:33.491407",
+            "lastUpdated": "2025-04-04T18:14:46.978817",,
             "comments": [
                 {
                     "createdAt": "2025-04-03T16:20:06.330759",

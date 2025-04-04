@@ -49,8 +49,6 @@ public class CommentController {
                             schema = @Schema(implementation = CommentDTO.class),
                             examples = @ExampleObject(value = """
         {
-            "id": 1,
-            "articleId": 10,
             "text": "Great article! Very informative.",
             "createdAt": "2024-04-04T12:00:00Z"
         }
