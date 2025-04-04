@@ -23,7 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/articles")
-@Tag(name = "Add Comments", description = "Endpoints for adding article to comments to a given article")
+@Tag(name = "Add Comments", description = "Endpoints for adding comments to a specific article, enabling user interaction and feedback.")
 public class CommentController {
     private final CommentService commentService;
 
